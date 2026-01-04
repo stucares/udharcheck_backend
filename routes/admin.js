@@ -11,6 +11,11 @@ router.use(verifyToken, isAdmin);
 // Dashboard
 router.get('/dashboard', adminController.getDashboardStats);
 
+// Pending counts for admin dashboard badges
+router.get('/verifications/pending-count', adminController.getPendingVerificationsCount);
+router.get('/reports/pending-count', adminController.getPendingReportsCount);
+router.get('/disputes/pending-count', adminController.getPendingDisputesCount);
+
 // Users management
 router.get('/users', adminController.getAllUsers);
 router.get('/users/:id', adminController.getUserDetails);

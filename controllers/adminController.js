@@ -2,6 +2,48 @@ const { User, LoanRequest, Report, Dispute, Settings, ActivityLog, Repayment } =
 const { Op } = require('sequelize');
 const sequelize = require('../models/index');
 
+// Get pending verifications count
+exports.getPendingVerificationsCount = async (req, res) => {
+  try {
+    const count = await User.count({
+      where: {
+        verificationStatus: 'pending',
+        role: { [Op.ne]: 'admin' }
+      }
+    });
+    res.json({ success: true, count });
+  } catch (error) {
+    console.error('Get pending verifications count error:', error);
+    res.status(500).json({ success: false, message: 'Failed to get count', error: error.message });
+  }
+};
+
+// Get pending reports count
+exports.getPendingReportsCount = async (req, res) => {
+  try {
+    const count = await Report.count({
+      where: { status: 'pending' }
+    });
+    res.json({ success: true, count });
+  } catch (error) {
+    console.error('Get pending reports count error:', error);
+    res.status(500).json({ success: false, message: 'Failed to get count', error: error.message });
+  }
+};
+
+// Get pending disputes count
+exports.getPendingDisputesCount = async (req, res) => {
+  try {
+    const count = await Dispute.count({
+      where: { status: { [Op.in]: ['open', 'under_review'] } }
+    });
+    res.json({ success: true, count });
+  } catch (error) {
+    console.error('Get pending disputes count error:', error);
+    res.status(500).json({ success: false, message: 'Failed to get count', error: error.message });
+  }
+};
+
 // Get dashboard stats
 exports.getDashboardStats = async (req, res) => {
   try {
